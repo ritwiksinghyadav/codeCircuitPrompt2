@@ -182,131 +182,126 @@ export default function PlannerPage() {
     : null
 
   return (
-    <div className="flex flex-col min-h-screen p-4 md:p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">{trip.title}</h1>
-          <p className="text-muted-foreground">{trip.destination}</p>
-        </div>
-        <div className="flex gap-2">
-          <div className="flex gap-2">
-            <select
-              className="px-3 py-1 border rounded-md bg-background"
-              value={selectedCategory || ""}
-              onChange={(e) => setSelectedCategory(e.target.value || null)}
-            >
-              <option value="">All Categories</option>
-              <option value="food">Food</option>
-              <option value="adventure">Adventure</option>
-              <option value="chill">Chill</option>
-              <option value="culture">Culture</option>
-              <option value="transport">Transport</option>
-            </select>
-            <Button onClick={addDay} variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Day
-            </Button>
-            <Button onClick={() => setSettingsOpen(true)}>Trip Settings</Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid lg:grid-cols-[1fr_300px] gap-4">
-        <DndContext
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          onDragCancel={handleDragCancel}
-          collisionDetection={closestCorners}
-        >
-          <div className="flex gap-4 flex-wrap pb-4">
-            {trip.days.map((day) => {
-              const filteredActivities = selectedCategory
-                ? day.activities.filter((activity) => activity.category === selectedCategory)
-                : day.activities
-
-              return (
-                <TripDay
-                  key={day.id}
-                  day={day}
-                  onAddActivity={() => {
-                    setSelectedDay(day)
-                    setActivityDialogOpen(true)
-                  }}
-                  onEditActivity={(activity) => {
-                    setSelectedDay(day)
-                    setSelectedActivity(activity)
-                    setActivityDialogOpen(true)
-                  }}
-                  onDeleteActivity={(activityId) => {
-                    setTrip({
-                      ...trip,
-                      days: trip.days.map((d) =>
-                        d.id === day.id
-                          ? {
-                            ...d,
-                            activities: d.activities.filter((a) => a.id !== activityId),
-                          }
-                          : d
-                      ),
-                    })
-                  }}
-                  activeId={activeId}
-                  activities={filteredActivities}
-                />
-              )
-            }
-            )
-            }
-          </div>
-
-          <DragOverlay>
-            {activeActivity && (
-              <div className="w-72">
-                <ActivityCard
-                  activity={activeActivity}
-                  onEdit={() => { }}
-                  onDelete={() => { }}
-                  isDragging
-                />
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/80 dark:border-gray-700/80 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 text-transparent bg-clip-text bg-300% animate-gradient">
+                {trip.title}
+              </h1>
+              <div className="space-y-1">
+                <p className="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-2">
+                  <span className="animate-bounce">📍</span> {trip.destination}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                  <span>📅</span> 
+                  {new Date(trip.startDate).toLocaleDateString("en-US", { 
+                    month: "short", 
+                    day: "numeric", 
+                    year: "numeric" 
+                  })} 
+                  <span>→</span> 
+                  {new Date(trip.endDate).toLocaleDateString("en-US", { 
+                    month: "short", 
+                    day: "numeric", 
+                    year: "numeric" 
+                  })}
+                </p>
               </div>
-            )}
-          </DragOverlay>
-        </DndContext>
-
-        <div className="bg-card border rounded-lg p-4">
-          <Calendar
-            mode="range"
-            selected={{
-              from: new Date(trip.startDate),
-              to: new Date(trip.endDate),
-            }}
-            className="rounded-md border"
-            onSelect={(dateRange) => {
-              if (dateRange?.from && dateRange?.to) {
-                const newStartDate = dateRange.from;
-                const newEndDate = dateRange.to;
-                const existingDays = trip.days;
-
-                // Generate new days while preserving activities
-                const newDays = generateInitialDays(newStartDate, newEndDate).map(newDay => {
-                  // Try to find matching day by index from existing days
-                  const existingDay = existingDays.find(d =>
-                    new Date(d.date).toDateString() === new Date(newDay.date).toDateString()
-                  );
-                  return existingDay ? { ...newDay, activities: existingDay.activities } : newDay;
-                });
-
-                setTrip(prev => ({
-                  ...prev,
-                  startDate: newStartDate.toISOString(),
-                  endDate: newEndDate.toISOString(),
-                  days: newDays
-                }));
-              }
-            }}
-          />
+            </div>
+            <div className="flex items-center gap-4">
+              <select
+                className="pl-4 pr-10 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-sm font-medium shadow-sm hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500/20 dark:focus:ring-purple-400/20"
+                value={selectedCategory || ""}
+                onChange={(e) => setSelectedCategory(e.target.value || null)}
+              >
+                <option value="">All Categories</option>
+                <option value="food">🍽️ Food</option>
+                <option value="adventure">🏃‍♂️ Adventure</option>
+                <option value="chill">🌴 Chill</option>
+                <option value="culture">🏛️ Culture</option>
+                <option value="transport">🚗 Transport</option>
+              </select>
+              <Button
+                variant="outline"
+                className="px-6 py-2.5 rounded-xl border-2 hover:text-black border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 hover:bg-purple-50 dark:hover:bg-gray-700/50 hover:border-purple-500 dark:hover:border-purple-400 transition-all duration-200"
+                onClick={() => setSettingsOpen(true)}
+              >
+                ⚙️ Settings
+              </Button>
+            </div>
+          </div>
         </div>
-      </div>
+      </header>
+
+      <main className="flex-1 px-4 py-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <DndContext
+              collisionDetection={closestCorners}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              onDragCancel={handleDragCancel}
+            >
+              {trip.days.map((day) => (
+                <div key={day.id} className="transform transition-all duration-200 hover:scale-[1.02]">
+                  <TripDay
+                    day={day}
+                    onAddActivity={() => {
+                      setSelectedDay(day)
+                      setActivityDialogOpen(true)
+                    }}
+                    onEditActivity={(activity) => {
+                      setSelectedDay(day)
+                      setSelectedActivity(activity)
+                      setActivityDialogOpen(true)
+                    }}
+                    onDeleteActivity={(activityId) =>
+                      setTrip({
+                        ...trip,
+                        days: trip.days.map((d) =>
+                          d.id === day.id
+                            ? {
+                                ...d,
+                                activities: d.activities.filter((a) => a.id !== activityId),
+                              }
+                            : d
+                        ),
+                      })
+                    }
+                    activeId={activeId}
+                    activities={day.activities.filter(
+                      (activity) =>
+                        !selectedCategory || activity.category === selectedCategory
+                    )}
+                  />
+                </div>
+              ))}
+              <DragOverlay>
+                {activeId && (
+                  <div className="transform scale-105 rotate-2 opacity-90">
+                    <ActivityCard
+                      activity={trip.days.find(day => day.activities.some(activity => activity.id === activeId))?.activities.find(activity => activity.id === activeId)!}
+                      onEdit={() => {}}
+                      onDelete={() => {}}
+                      isDragging={true}
+                    />
+                  </div>
+                )}
+              </DragOverlay>
+            </DndContext>
+          </div>
+        </div>
+      </main>
+
+      <Button
+        className="fixed bottom-8 right-8 h-14 w-14 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-pink-600 hover:to-purple-600 text-white shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200"
+        onClick={addDay}
+      >
+        <Plus className="h-6 w-6" />
+        <span className="sr-only">Add Day</span>
+      </Button>
 
       <TripSettingsDialog
         open={settingsOpen}
