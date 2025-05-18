@@ -27,7 +27,7 @@ export default function Home() {
       </header>
       <div className="w-full absolute top-16 bg-yellow-100 dark:bg-yellow-900 text-yellow-900 dark:text-yellow-100 py-2 px-4 text-center text-sm font-medium border-b border-yellow-300 dark:border-yellow-800">
         <span>
-          Note: This project was completed in 34 minutes using <strong>v0.dev</strong>, <strong>Trae</strong> as the code editor, <strong>Claude</strong>, <strong>GPT-4.1</strong>, and <strong>Cline</strong>, following vibe coding methods.
+          Note: This project was completed in 42 minutes using <strong>v0.dev</strong>, <strong>Trae</strong> as the code editor, <strong>Claude</strong>, <strong>GPT-4.1</strong>, and <strong>Cline</strong>, following vibe coding methods.
         </span>
       </div>
       <main className="flex-1 pt-16">
