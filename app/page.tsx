@@ -25,6 +25,11 @@ export default function Home() {
           </Link> */}
         </nav>
       </header>
+      <div className="w-full absolute top-16 bg-yellow-100 dark:bg-yellow-900 text-yellow-900 dark:text-yellow-100 py-2 px-4 text-center text-sm font-medium border-b border-yellow-300 dark:border-yellow-800">
+        <span>
+          Note: This project was completed in 34 minutes using <strong>v0.dev</strong>, <strong>Trae</strong> as the code editor, <strong>Claude</strong>, <strong>GPT-4.1</strong>, and <strong>Cline</strong>, following vibe coding methods.
+        </span>
+      </div>
       <main className="flex-1 pt-16">
         <section className="w-full py-24 md:py-32 lg:py-40 bg-gradient-to-b from-white to-pink-50">
           <div className="container px-4 md:px-6 mx-auto max-w-4xl text-center">
